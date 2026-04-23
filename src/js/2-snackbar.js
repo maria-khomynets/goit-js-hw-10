@@ -9,23 +9,13 @@ function handleSubmit(event) {
   event.preventDefault();
 
   const delay = Number(event.target.elements.delay.value);
-  const stateRs = event.target.elements.state.value;
+  const state = event.target.elements.state.value;
 
-  let state;
-
-  if (delay === 0) {
-    return;
-  }
-
-  if (stateRs === 'fulfilled') {
-    state = true;
-  } else if (stateRs === 'rejected') {
-    state = false;
-  }
+  if (delay <= 0) return;
 
   const promise = new Promise((resolve, reject) => {
     setTimeout(() => {
-      if (state === true) {
+      if (state === 'fulfilled') {
         resolve(delay);
       } else {
         reject(delay);
@@ -34,24 +24,16 @@ function handleSubmit(event) {
   });
 
   promise
-    .then(value => {
-      iziToast.show({
+    .then(delay => {
+      iziToast.success({
         title: 'OK',
-        message: `✅ Fulfilled promise in ${value}ms`,
-        titleColor: '#ffffff',
-        messageColor: '#ffffff',
-        backgroundColor: '#59a10d',
-        timeout: 8000,
+        message: `Fulfilled promise in ${delay}ms`,
       });
     })
-    .catch(error => {
-      iziToast.show({
+    .catch(delay => {
+      iziToast.error({
         title: 'Error',
-        message: `❌ Rejected promise in ${error}ms`,
-        titleColor: '#ffffff',
-        messageColor: '#ffffff',
-        backgroundColor: '#ef4040',
-        timeout: 8000,
+        message: `Rejected promise in ${delay}ms`,
       });
     });
 }
